@@ -14,10 +14,13 @@ fi
 OF=${2:-`pwd`/out}
 mkdir -p $OF
 
-## loop trough supplied file and grab html and headers
+# loop trough supplied file and grab html and headers
 while read i
 do
     FN=`echo $i | md5`
-    echo "$i" | tee $OF/$FN.headers
-    curl $i -vk -o $OF/$FN 2>&1 | grep -e "^< " | tee -a $OF/$FN.headers
+    echo "out/$FN $i" | tee -a "$OF/../output.txt"
+
+    curl $i -s -k -v &> "$OF/$FN"
+
+    
 done < $FI
