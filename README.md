@@ -8,6 +8,11 @@ This command will create a folder called "out" in the current directory you are 
 $ gedo list-of-urls.txt
 ```
 
+This command takes input from *stdin*
+```bash
+$ cat list-of-urls.txt | gedo
+```
+
 This command will create a folder to whatever location you choose.
 ```bash
 $ gedo list-of-urls.txt path/to/my/output-folder
