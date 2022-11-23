@@ -1,13 +1,23 @@
 #!/bin/bash
 
+# Check if input comes from arg $1 or stdin
 FI=$1
-[ -z "$FI" ] && echo "Arg \$1 is missing... Need a list of URLs" && exit 1
+if [ -n "$FI" ]; then
+    :
+elif [ ! -t 0 ]; then
+    FI=/dev/stdin
+else
+    echo "Need a list of URLs... Reed from stdin or arg 1" && exit 1
+fi
 
+# Make output diretory
 OF=${2:-`pwd`/out}
 mkdir -p $OF
 
-for i in $(cat $FI); do
+## loop trough supplied file and grab html and headers
+while read i
+do
     FN=`echo $i | md5`
     echo "$i" | tee $OF/$FN.headers
-    curl $i -v -o $OF/$FN 2>&1 | grep -e "^< " | tee -a $OF/$FN.headers
-done
+    curl $i -vk -o $OF/$FN 2>&1 | grep -e "^< " | tee -a $OF/$FN.headers
+done < $FI
