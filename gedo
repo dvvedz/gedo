@@ -1,0 +1,13 @@
+#!/bin/bash
+
+FI=$1
+[ -z "$FI" ] && echo "Arg \$1 is missing... Need a list of URLs" && exit 1
+
+OF=${2:-`pwd`/out}
+mkdir -p $OF
+
+for i in $(cat $FI); do
+    FN=`echo $i | md5`
+    echo "$i" | tee $OF/$FN.headers
+    curl $i -v -o $OF/$FN 2>&1 | grep -e "^< " | tee -a $OF/$FN.headers
+done
